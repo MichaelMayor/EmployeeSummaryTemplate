@@ -137,4 +137,20 @@ const employeeQuestions = [{
         message: "Would you like to add another team member?",
         choices: ["Yes", "No"]
     }
-]
+];
+
+function buildTeamList() {
+    inquire.prompt(employeeQuestions).then(employeeInfo => {
+        if (employeeInfo.role == "engineer") {
+            var newMember = new Engineer(employeeInfo.name, teamList.length + 1, employeeInfo.email, employeeInfo.github);
+        } else {
+            var newMember = new Intern(employeeInfo.name, teamList.length + 1, employeeInfo.email, employeeInfo.school);
+        }
+        teamList.push(newMember);
+        if (employeeInfo.addAnother === "Yes") {
+            buildTeamList();
+        } else {
+            buildHtmlPage();
+        }
+    });
+};
