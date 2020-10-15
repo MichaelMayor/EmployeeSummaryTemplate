@@ -33,7 +33,8 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
-var teamList = [];
+var employees = [];
+var html;
 const managerQuestions = [{
         type: "input",
         name: "name",
@@ -140,17 +141,35 @@ const employeeQuestions = [{
 ];
 
 function buildTeamList() {
-    inquire.prompt(employeeQuestions).then(employeeInfo => {
-        if (employeeInfo.role == "engineer") {
-            var newMember = new Engineer(employeeInfo.name, teamList.length + 1, employeeInfo.email, employeeInfo.github);
+    inquire.prompt(employeeQuestions).then(employee => {
+        if (employee.role == "engineer") {
+            var newMember = new Engineer(employee.name, employees.length + 1, employee.email, employee.github);
         } else {
-            var newMember = new Intern(employeeInfo.name, teamList.length + 1, employeeInfo.email, employeeInfo.school);
+            var newMember = new Intern(employee.name, employees.length + 1, employee.email, employee.school);
         }
-        teamList.push(newMember);
-        if (employeeInfo.addAnother === "Yes") {
+        employees.push(newMember);
+        if (employee.addAnother === "Yes") {
             buildTeamList();
         } else {
-            buildHtmlPage();
+            html = render(employees);
         }
     });
 };
+
+function init() {
+    inquire.prompt(managerQuestions).then(employee => {
+        let teamManager = new Manager(employee.name, 1, employee.email, employee.officeNum);
+        employees.push(teamManager);
+        console.log(" ");
+        if (employee.addAnother === "Yes") {
+            buildTeamList();    
+        } else {
+            html = render(employees);
+        }
+        fs.writeFileSync("./output/teamPage.html", html, function (err) {
+            if (err) throw err;
+        })
+    })
+}
+
+init();
