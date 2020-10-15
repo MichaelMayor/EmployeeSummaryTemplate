@@ -33,3 +33,108 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+var teamList = [];
+const managerQuestions = [{
+        type: "input",
+        name: "name",
+        message: "What is your project manager's name?",
+        validate: async (input) => {
+            if (input == "" || /\s/.test(input)) {
+                return "Invalid input";
+            }
+            return true;
+        }
+    },
+    {
+        type: "input",
+        name: "email",
+        message: "What is your project manager's email?",
+        validate: async (input) => {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(input)) {
+                return true;
+            }
+            return "Invalid input";
+        }
+    },
+    {
+        type: "input",
+        name: "officeNum",
+        message: "What is your project manager's office number?",
+        validate: async (input) => {
+            if (isNaN(input)) {
+                return "Invalid input";
+            }
+            return true;
+        }
+    },
+    {
+        type: "list",
+        name: "addAnother",
+        message: "Would you like to add another team member?",
+        choices: ["Yes", "No"]
+    }
+]
+
+const employeeQuestions = [{
+        type: "input",
+        name: "name",
+        message: "What is this team member's name?",
+        validate: async (input) => {
+            if (input == "") {
+                return "Invalid input";
+            }
+            return true;
+        }
+    },
+    {
+        type: "input",
+        name: "email",
+        message: "What is this team member's name?",
+        validate: async (input) => {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(input)) {
+                return true;
+            }
+            return "Invalid input";
+        }
+    },
+    {
+        type: "list",
+        name: "role",
+        message: "What is this team member's role?",
+        choices: ["engineer", "intern"]
+    },
+    {
+        when: input => {
+            return input.role == "engineer"
+        },
+        type: "input",
+        name: "github",
+        message: "What is this team member's Github username?",
+        validate: async (input) => {
+            if (input == "" || /\s/.test(input)) {
+                return "Invalid input";
+            }
+            return true;
+        }
+    },
+    {
+        when: input => {
+            return input.role == "intern"
+        },
+        type: "input",
+        name: "school",
+        message: "What school does this team member attend?",
+        validate: async (input) => {
+            if (input == "") {
+                return "Invalid input";
+            }
+            return true;
+        }
+    },
+    {
+        type: "list",
+        name: "addAnother",
+        message: "Would you like to add another team member?",
+        choices: ["Yes", "No"]
+    }
+]
