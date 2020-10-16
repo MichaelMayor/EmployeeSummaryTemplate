@@ -4,7 +4,6 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
-const util = require('util');
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
@@ -153,7 +152,7 @@ function buildTeamList() {
         if (employee.addAnother === "Yes") {
             buildTeamList();
         } else {
-            writeToFileAsync("./output/teamPage.html", render(employees));
+            writeToFile("./output/teamPage.html", render(employees));
         }
     });
 };
@@ -166,28 +165,27 @@ function writeToFile(fileName, data) {
             console.log("Your page has been created")
         }
     });
-}
-const writeToFileAsync = util.promisify(writeToFile);
+};
 
 function addManager(managerInfo) {
- 
-        let teamManager = new Manager(managerInfo.name, 1, managerInfo.email, managerInfo.officeNumber);
-        employees.push(teamManager);
-        console.log(" ");
-        if (managerInfo.addAnother === "Yes") {
-            buildTeamList();
-        } else {
-            writeToFileAsync("./output/teamPage.html", render(employees));
-        }
+
+    let teamManager = new Manager(managerInfo.name, 1, managerInfo.email, managerInfo.officeNumber);
+    employees.push(teamManager);
+    console.log(" ");
+    if (managerInfo.addAnother === "Yes") {
+        buildTeamList();
+    } else {
+        writeToFile("./output/teamPage.html", render(employees));
+    }
 };
 
 async function init() {
-    try{
-    const managerInfo = await inquirer.prompt(managerQuestions);
+    try {
+        const managerInfo = await inquirer.prompt(managerQuestions);
 
-    addManager(managerInfo)
-} catch (error) {
-    console.log(error);
-}
-}
+        addManager(managerInfo)
+    } catch (error) {
+        console.log(error);
+    }
+};
 init();
